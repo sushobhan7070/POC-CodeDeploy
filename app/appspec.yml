@@ -1,0 +1,32 @@
+version: 0.0
+os: linux
+
+
+files:
+  - source: src/sample.war
+    destination: /usr/share/tomcat/webapps/sample.war
+
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 300
+      runas: ec2-user
+
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 300
+      runas: ec2-user
+    - location: scripts/set_log_level.sh
+      timeout: 300
+      runas: ec2-user
+
+  ApplicationStart:
+    - location: scripts/restart_services.sh
+      timeout: 300
+      runas: ec2-user
+
+  ValidateService:
+    - location: deploy/scripts/validate_log_level.sh
+      timeout: 300
+      runas: ec2-user
+
